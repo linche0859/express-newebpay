@@ -8,19 +8,19 @@ router.get('/', function (req, res, next) {
 router.get('/no-ajax', function (req, res, next) {
   res.render('no-ajax.ejs', { title: '結帳' });
 });
-router.get('/notify', function (req, res, next) {
-  res.render('notify', { title: '購買成功' });
+router.get('/return', function (req, res, next) {
+  res.render('return', { title: '購買成功' });
 });
 
-// 藍新金流的前台回傳
+// 藍新金流的後台回傳
 router.post('/notify', function (req, res, next) {
   const { body } = req;
-  res.redirect(303, '/notify');
+  res.end();
 });
-// 藍新金流的後台回傳
+// 藍新金流的前台回傳
 router.post('/return', function (req, res, next) {
   const { body } = req;
-  res.end();
+  res.redirect(303, '/return');
 });
 
 module.exports = router;
