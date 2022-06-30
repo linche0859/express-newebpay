@@ -74,9 +74,10 @@ router.post('/return', function (req, res, next) {
   res.redirect(303, `/return?MerchantOrderNo=${order.MerchantOrderNo}`);
 });
 router.get('/return', function (req, res, next) {
-  const { query: MerchantOrderNo } = req;
+  const { query } = req;
   const index = orders.findIndex(
-    (item) => item.MerchantOrderNo.toString() === MerchantOrderNo.toString()
+    (item) =>
+      item.MerchantOrderNo.toString() === query.MerchantOrderNo.toString()
   );
   if (index === -1) {
     return res.redirect(303, '/cart');
