@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+  </head>
+  <body>
+    <form action="https://ccore.spgateway.com/MPG/mpg_gateway" method="post">
+      <input type="hidden" name="MerchantID" value="<%= MerchantID %>" />
+      <input type="hidden" name="TradeSha" value="<%= TradeSha %>" />
+      <input type="hidden" name="TradeInfo" value="<%= TradeInfo %>" />
+      <input type="hidden" name="TimeStamp" value="<%= TimeStamp %>" />
+      <input type="hidden" name="Version" value="<%= Version %>" />
+      <input
+        type="hidden"
+        name="MerchantOrderNo"
+        value="<%= MerchantOrderNo %>"
+      />
+      <input type="number" name="Amt" value="<%= Amt %>" disabled />
+      <input type="email" name="Email" value="<%= Email %>" disabled />
+      <button type="submit">結帳</button>
+    </form>
+  </body>
+</html>

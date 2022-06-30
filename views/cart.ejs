@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+  </head>
+  <body>
+    <main id="app">
+      <form action="/cart" method="post" @submit.prevent="submitHandler">
+        <label for="ItemDesc">商品名稱：</label>
+        <input
+          id="ItemDesc"
+          type="text"
+          v-model.trim="order.ItemDesc"
+          required
+        />
+        <br />
+        <label for="Amt">商品金額：</label>
+        <input
+          id="Amt"
+          type="number"
+          name="Amt"
+          v-model.number="order.Amt"
+          min="1"
+        />
+        <br />
+        <label for="Email">信箱：</label>
+        <input
+          id="Email"
+          type="email"
+          name="Email"
+          v-model.trim="order.Email"
+          required
+        />
+        <br />
+        <p v-show="error">{{ error }}</p>
+        <button type="submit">加入購物車</button>
+      </form>
+    </main>
+
+    <script src="https://unpkg.com/vue@3"></script>
+    <script type="module">
+      const { createApp } = Vue;
+      createApp({
+        data() {
+          return {
+            order: {
+              ItemDesc: '我需要這個酷東西',
+              Amt: 1000,
+              Email: 'test@gmail.com',
+            },
+            error: '',
+          };
+        },
+        methods: {
+          submitHandler() {
+            if (!this.order.ItemDesc) {
+              this.error = '請填入商品名稱';
+              return;
+            }
+            if (Number(this.order.Amt < 1)) {
+              this.error = '商品金額應大於 0';
+              return;
+            }
+            if (!this.order.Email) {
+              this.error = '請填入信箱';
+              return;
+            }
+            fetch('/cart', {
+              method: 'POST',
+              body: JSON.stringify(this.order),
+              headers: {
+                'content-type': 'application/json',
+              },
+            }).then((data) => {
+              const { ItemDesc, Amt, Email } = this.order;
+              const url = `/checkout?${Object.entries(this.order)
+                .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
+                .join('&')}`;
+              window.location.href = url;
+            });
+          },
+        },
+      }).mount('#app');
+    </script>
+  </body>
+</html>

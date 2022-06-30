@@ -1,12 +1,60 @@
 var express = require('express');
 var router = express.Router();
+const {
+  create_mpg_aes_encrypt,
+  create_mpg_sha_encrypt,
+  create_mpg_aes_decrypt,
+} = require('../libs/tool');
+
+const orders = [];
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
   res.render('index', { title: 'Express' });
 });
-router.get('/no-ajax', function (req, res, next) {
-  res.render('no-ajax.ejs', { title: '結帳' });
+router.get('/cart', function (req, res, next) {
+  res.render('cart', { title: '購物車頁' });
+});
+router.post('/cart', function (req, res, next) {
+  res.json('加入購物車成功');
+});
+router.get('/checkout', function (req, res, next) {
+  const {
+    query: { ItemDesc, Amt, Email },
+  } = req;
+  if (!(ItemDesc && Amt && Email) || isNaN(Amt) || Number(Amt) < 1) {
+    return res.render('error', {
+      message: '資料不正確',
+      error: { status: 400, stack: '' },
+    });
+  }
+
+  const MerchantOrderNo = Math.round(new Date().getTime() / 1000);
+  const TradeInfo = create_mpg_aes_encrypt({
+    TimeStamp: MerchantOrderNo,
+    MerchantOrderNo,
+    Amt: Number(Amt),
+    ItemDesc: decodeURIComponent(ItemDesc),
+    Email: decodeURIComponent(Email),
+  });
+  const TradeSha = create_mpg_sha_encrypt(TradeInfo);
+
+  const order = {
+    MerchantID: process.env.MERCHANT_ID,
+    TradeSha,
+    TradeInfo,
+    TimeStamp: MerchantOrderNo,
+    Version: process.env.VERSION,
+    MerchantOrderNo,
+    Amt: Number(Amt),
+    Email,
+  };
+  orders.push(order);
+
+  res.render('checkout', {
+    title: '結帳頁',
+    ...order,
+  });
 });
 router.get('/return', function (req, res, next) {
   res.render('return', { title: '購買成功' });
@@ -15,11 +63,11 @@ router.get('/return', function (req, res, next) {
 // 藍新金流的後台回傳
 router.post('/notify', function (req, res, next) {
   const { body } = req;
+  console.log(body);
   res.end();
 });
 // 藍新金流的前台回傳
 router.post('/return', function (req, res, next) {
-  const { body } = req;
   res.redirect(303, '/return');
 });
 
