@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+  </head>
+  <body>
+    <form action="https://ccore.spgateway.com/MPG/mpg_gateway" method="post">
+      <input type="hidden" name="MerchantID" value="MS138715061" />
+      <input
+        type="hidden"
+        name="TradeSha"
+        value="8399A981D3105F9ACCD2E026D7CC0F891B700EF92CBCE6DF27DE609EDB15408B"
+      />
+      <input
+        type="hidden"
+        name="TradeInfo"
+        value="33ec59cf470cca36ade48c16507e65975e9880d941ee736aa06e5e0d7591e076901f3a61a0fe76f348ed14e74d1a2feb91acefe3ce6e677fac552584214f02645685de1630166bbbb73667825d0ea105c433b97ccb34008d2209c9e336712ed1d1e97ccc0cd59272b831be99e313fbb900cad1c861e9a35d7d1375b250f1d917766c8efbacd9edd661d191c9dfaa55e2ba50bdfaaa284a5bbed0e3ce5c3a05e8"
+      />
+      <input type="hidden" name="TimeStamp" value="1656579176" />
+      <input type="hidden" name="Version" value="1.5" />
+      <input type="hidden" name="MerchantOrderNo" value="1656579176" />
+      <input type="number" name="Amt" value="100" disabled />
+      <input
+        type="email"
+        name="Email"
+        value="rockecstasy@yahoo.com.tw"
+        disabled
+      />
+      <button type="submit">送出</button>
+    </form>
+  </body>
+</html>
