@@ -48,6 +48,7 @@ router.get('/checkout', function (req, res, next) {
     MerchantOrderNo,
     Amt: Number(Amt),
     Email,
+    ItemDesc,
   };
   orders.push(order);
 
@@ -56,19 +57,32 @@ router.get('/checkout', function (req, res, next) {
     ...order,
   });
 });
-router.get('/return', function (req, res, next) {
-  res.render('return', { title: '購買成功' });
-});
 
 // 藍新金流的後台回傳
 router.post('/notify', function (req, res, next) {
-  const { body } = req;
-  console.log(body);
   res.end();
 });
 // 藍新金流的前台回傳
 router.post('/return', function (req, res, next) {
-  res.redirect(303, '/return');
+  const { body } = req;
+  const decodeOrder = create_mpg_aes_decrypt(body.TradeInfo);
+  const order = orders.find(
+    (item) => item.MerchantOrderNo === decodeOrder.Result.MerchantOrderNo
+  );
+  if (!order) return res.status(400).json('訂單不存在');
+  res.redirect(303, `/return?MerchantOrderNo=${order.MerchantOrderNo}`);
+});
+router.get('/return', function (req, res, next) {
+  const { query: MerchantOrderNo } = req;
+  const index = orders.findIndex(
+    (item) => item.MerchantOrderNo === MerchantOrderNo
+  );
+  if (index === -1) {
+    return res.redirect(303, '/cart');
+  }
+  const { ItemDesc, Amt, Email } = orders[index];
+  orders.splice(index, 1);
+  res.render('return', { title: '購買成功', ItemDesc, Amt, Email });
 });
 
 module.exports = router;
