@@ -66,11 +66,9 @@ router.post('/notify', function (req, res, next) {
 router.post('/return', function (req, res, next) {
   const { body } = req;
   const decodeOrder = create_mpg_aes_decrypt(body.TradeInfo);
-  console.log(orders);
-  console.log(body.TradeInfo);
-  console.log(decodeOrder);
   const order = orders.find(
-    (item) => item.MerchantOrderNo === decodeOrder.Result.MerchantOrderNo
+    (item) =>
+      item.MerchantOrderNo.toString() === decodeOrder.Result.MerchantOrderNo
   );
   if (!order) return res.status(400).json('訂單不存在');
   res.redirect(303, `/return?MerchantOrderNo=${order.MerchantOrderNo}`);
@@ -78,7 +76,7 @@ router.post('/return', function (req, res, next) {
 router.get('/return', function (req, res, next) {
   const { query: MerchantOrderNo } = req;
   const index = orders.findIndex(
-    (item) => item.MerchantOrderNo === MerchantOrderNo
+    (item) => item.MerchantOrderNo.toString() === MerchantOrderNo.toString()
   );
   if (index === -1) {
     return res.redirect(303, '/cart');
