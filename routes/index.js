@@ -66,6 +66,7 @@ router.post('/notify', function (req, res, next) {
 router.post('/return', function (req, res, next) {
   const { body } = req;
   const decodeOrder = create_mpg_aes_decrypt(body.TradeInfo);
+  console.log(orders);
   console.log(body.TradeInfo);
   console.log(decodeOrder);
   const order = orders.find(
