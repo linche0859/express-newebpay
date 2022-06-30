@@ -13,7 +13,7 @@ router.get('/', function (req, res, next) {
   res.render('index', { title: 'Express' });
 });
 router.get('/cart', function (req, res, next) {
-  res.render('cart', { title: '購物車頁' });
+  res.render('cart', { title: '購物車' });
 });
 router.post('/cart', function (req, res, next) {
   res.json('加入購物車成功');
@@ -53,7 +53,7 @@ router.get('/checkout', function (req, res, next) {
   orders.push(order);
 
   res.render('checkout', {
-    title: '結帳頁',
+    title: '結帳',
     ...order,
   });
 });
